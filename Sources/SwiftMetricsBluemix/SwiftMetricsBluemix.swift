@@ -103,10 +103,11 @@ public class SwiftMetricsBluemix {
     enabledMetrics = metricsToEnable
     self.SM = swiftMetricsInstance
     if !self.initCredentials() {
-  //    return
+      return
     }
 
     try self.detectBAMBinding(swiftMetricsInstance: swiftMetricsInstance)
+
     self.notifyStatus()
     self.refreshConfig()
     self.setMonitors(monitor: swiftMetricsInstance.monitor())
