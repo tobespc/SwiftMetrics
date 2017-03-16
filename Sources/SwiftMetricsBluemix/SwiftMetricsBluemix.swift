@@ -99,14 +99,15 @@ public class SwiftMetricsBluemix {
   var instanceId = ""
 
   public init(metricsToEnable: [String], swiftMetricsInstance: SwiftMetrics) throws  {
-    Log.entry("[Auto-Scaling Agent] initialization(\(metricsToEnable))")
+
+    try self.detectBAMBinding(swiftMetricsInstance: swiftMetricsInstance)
+    Log.entry("[SwiftMetricsBluemix] initialization(\(metricsToEnable))")
     enabledMetrics = metricsToEnable
     self.SM = swiftMetricsInstance
     if !self.initCredentials() {
       return
     }
 
-    try self.detectBAMBinding(swiftMetricsInstance: swiftMetricsInstance)
 
     self.notifyStatus()
     self.refreshConfig()
