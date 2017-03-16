@@ -100,10 +100,12 @@ public class SwiftMetricsBluemix {
 
   public init(metricsToEnable: [String], swiftMetricsInstance: SwiftMetrics) throws  {
 
-    try self.detectBAMBinding(swiftMetricsInstance: swiftMetricsInstance)
+    self.SM = swiftMetricsInstance
+    try self.detectBAMBinding(swiftMetricsInstance: self.SM)
+
     Log.entry("[SwiftMetricsBluemix] initialization(\(metricsToEnable))")
     enabledMetrics = metricsToEnable
-    self.SM = swiftMetricsInstance
+
     if !self.initCredentials() {
       return
     }
