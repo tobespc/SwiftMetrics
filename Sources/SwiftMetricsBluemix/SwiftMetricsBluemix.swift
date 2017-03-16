@@ -124,6 +124,7 @@ public class SwiftMetricsBluemix {
     let bamServ: Service? = configMgr.getServices(type: bamServiceLabel).first
     guard let _ = bamServ else {
       Log.error("[SwiftMetricsBluemix] Could not find BAM service.")
+      print("[SwiftMetricsBluemix] Could not find BAM service.")
       return
     }
     var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
