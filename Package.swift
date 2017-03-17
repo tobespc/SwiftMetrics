@@ -4,6 +4,7 @@ let package = Package(
   name: "SwiftMetrics",
   targets: [
       Target(name: "SwiftMetricsKitura", dependencies: ["SwiftMetrics"]),
+      Target(name: "SwiftBAMDC", dependencies: ["SwiftMetricsKitura"]),
       Target(name: "SwiftMetricsBluemix", dependencies: ["SwiftMetricsKitura","SwiftBAMDC"]),
       Target(name: "SwiftMetricsDash", dependencies: ["SwiftMetricsBluemix"])
     ],
