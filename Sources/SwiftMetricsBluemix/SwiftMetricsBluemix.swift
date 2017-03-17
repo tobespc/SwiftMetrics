@@ -81,7 +81,8 @@ public class SwiftMetricsBluemix {
   let autoScalingServiceLabel = "Auto-Scaling"
   // used to find the AutoScaling service from the Cloud Foundry Application Environment
 
-  let bamServiceLabel = "AvailabilityMonitoring"
+  let bamServiceLabel = "AvailabilityMonitoring.*"
+  let bamDebugLabel = "IBAM_ENABLE_DC"
   // used to find the BAM service from the Cloud Foundry Application Environment
 
 
@@ -126,12 +127,20 @@ public class SwiftMetricsBluemix {
     let configMgr = ConfigurationManager().load(.environmentVariables)
     // Find BAM service using convenience method
     let bamServ: Service? = configMgr.getServices(type: bamServiceLabel).first
-    guard let _ = bamServ else {
-      Log.error("[SwiftMetricsBluemix] Could not find BAM service.")
-      print("[SwiftMetricsBluemix] Could not find BAM service.")
-      return
+    
+    if let dcEn = ProcessInfo.processInfo.environment[bamDebugLabel],  dcEn == "true" {
+        Log.info("[SwiftMetricsBluemix] Detected BAM debug environment setting, enabling SwiftBAMDC")
+        
+        var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
     }
-    var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
+    else if let bamS = bamServ {
+        Log.info("[SwiftMetricsBluemix] Detected BAM Service \(bamS), enabling SwiftBAMDC ")
+        var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
+    }
+    else {
+        Log.info("[SwiftMetricsBluemix] Could not find BAM service.")
+        return
+    }
 
   }
 

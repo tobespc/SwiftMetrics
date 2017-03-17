@@ -38,7 +38,7 @@ import Configuration
 
 ////////////// Global Variables
 
-var localEnv : [String:Any] = ProcessInfo.processInfo.environment
+public var bamLocalEnv : [String:Any] = ProcessInfo.processInfo.environment
 
 let HTTP_POST: String = "POST"
 let HTTP_GET: String = "GET"
@@ -94,7 +94,7 @@ public class IBAMConfig {
     fileprivate let queue = DispatchQueue(label: "com.ibm.bam", qos: .background, target: nil)
     //fileprivate let waiter = DispatchSemaphore(value: 0)
     
-    //public var localEnv : [String:String] = [:]
+    //public var bamLocalEnv : [String:String] = [:]
     
     public var ingressHeaders : [String: String] = [
         "Content-Type": "application/json",
@@ -118,7 +118,7 @@ public class IBAMConfig {
         dcId         = UUID().uuidString.lowercased()
         sbURL        = getEnvironmentVal(name: "IBAM_SB_URL")
         sbToken      = getEnvironmentVal(name: "IBAM_SB_TOKEN")
-        //sbPath  = localEnv["IBAM_SB_PATH"] ?? SB_PATH
+        //sbPath  = bamLocalEnv["IBAM_SB_PATH"] ?? SB_PATH
         ingressURL   = getEnvironmentVal(name: "IBAM_INGRESS_URL")
         ingressPath  = inPath
         ingressToken = getEnvironmentVal(name: "IBAM_TOKEN")
@@ -153,11 +153,11 @@ public class IBAMConfig {
         
         if let envDic = stringToJSON(text: debugEnvStr) {
             for (key, val) in envDic {
-                localEnv[key] = val
+                bamLocalEnv[key] = val
             }
         }
         
-        Log.info("## Environment: \(localEnv)")
+        Log.info("## Environment: \(bamLocalEnv)")
     }
     
     public func stringToLoggerMessageType(logLevelString: String) -> LoggerMessageType {
@@ -913,7 +913,7 @@ func stringToJSON(text: String?) -> [String:Any]? {
 
 public func getEnvironmentVal(name: String, defVal : String = "") -> String {
     
-    if let val = localEnv[name] as? String {
+    if let val = bamLocalEnv[name] as? String {
         
         Log.debug("Env name: \(name), Val: \(val)\n")
         

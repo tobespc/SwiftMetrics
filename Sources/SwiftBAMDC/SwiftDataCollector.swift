@@ -39,6 +39,7 @@ public class SwiftDataCollector {
     var osResourceID: String!
     var origin: String!
     var tenant: String!
+    var registeredResources: Bool = false
 
 
     let bamConfig = BMConfig.sharedInstance
@@ -47,7 +48,7 @@ public class SwiftDataCollector {
 
         self.logLevel = self.bamConfig.logLevel
         HeliumLogger.use(self.logLevel)
-  print("[SwiftDataCollector] found it")      
+        //print("[SwiftDataCollector] found it")
         self.formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"
         self.formatter.timeZone = TimeZone(abbreviation: "UTC") as TimeZone!
 
@@ -62,6 +63,7 @@ public class SwiftDataCollector {
 
         monitor.on({ (_: InitData) in
             self.envInitandTopoRegister()
+            self.registeredResources = true
         })
 
         _ = SwiftMetricsKitura(swiftMetricsInstance: swiftMetricsInstance)
@@ -71,6 +73,8 @@ public class SwiftDataCollector {
         monitor.on(sendCPUMetrics)
         monitor.on(sendMemMetrics)
         monitor.on(sendAARData)
+        
+        self.envInitandTopoRegister()
 
     }
 
@@ -202,23 +206,36 @@ public class SwiftDataCollector {
 
     func envInitandTopoRegister() -> Void {
 
+        if self.registeredResources {
+            return
+        }
+        
         self.envData = self.monitor.getEnvironmentData()
+        
+        if(self.envData.isEmpty) {
+            self.envData = ProcessInfo.processInfo.environment
+        }
         Log.debug("envData: \(envData!)")
 
         let currentTime = Date()
         let utcTimeZoneStr = self.formatter.string(from: currentTime as Date)
 
-        if !self.envData["environment.VCAP_APPLICATION"]!.isEmpty{
+        if let envData = self.envData["environment.VCAP_APPLICATION"], !envData.isEmpty {
             let data = self.envData["environment.VCAP_APPLICATION"]!.data(using: String.Encoding.utf8)! as Data
             self.vcapAppDictionary = try! JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String: Any]
+            self.registeredResources = true
         }
+        else {
+            self.vcapAppDictionary = [:]
+            self.vcapAppDictionary["application_id"] = bamConfig.appId
+            self.vcapAppDictionary["space_id"] = bamConfig.spaceId
+            self.vcapAppDictionary["application_name"] = bamConfig.appName
+        }
+        
         Log.debug("vcapAppDictionary: \(vcapAppDictionary!)")
+        
 
-        if self.vcapAppDictionary != nil{
-            self.applicationName = self.vcapAppDictionary["application_name"] as! String
-        }
-
-        self.swiftDataCollectorInited = true
+        self.applicationName = self.bamConfig.appName
 
         var swiftAppResource : Dictionary<String,Any> = [
             "uniqueId": appResourceID,
@@ -237,10 +254,10 @@ public class SwiftDataCollector {
         }
         Log.debug("swiftAppResource: \(swiftAppResource)")
 
-        let hostName = self.envData["environment.HOSTNAME"]!
-        let version = self.envData["os.version"]! as String
-        let osName = self.envData["os.name"]! as String
-        let osArch = self.envData["os.arch"]! as String
+        let hostName = self.envData["environment.HOSTNAME"] ?? ""
+        let version = self.envData["os.version"] ?? ""
+        let osName = self.envData["os.name"] ?? ""
+        let osArch = self.envData["os.arch"] ?? ""
         let osVersion: String = osName + osArch + version
 
         let swiftOSResource : Dictionary<String,Any> = [
