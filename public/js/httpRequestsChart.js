@@ -208,5 +208,16 @@ function resizeHttpChart() {
             "translate(" + margin.left + "," + margin.top + ")")
         .attr("cx", function(d) { return http_xScale(d.time); })
         .attr("cy", function(d) { return http_yScale(d.longest); })
-        .append("svg:title").text(function(d) { return d.url; });
+        .append("svg:title").text(function(d) { // tooltip
+                    if(d.total === 1) {
+                        return d.url
+                    } else {
+                        return d.total
+                         + " requests\n average duration = "
+                         + d3.format(".2s")(d.average/1000)
+                         + "s\n longest duration = "
+                         +  d3.format(".2s")(d.longest/1000)
+                         + "s for URL: " + d.url;
+                    }
+                });
 }
