@@ -48,7 +48,7 @@ public class SwiftDataCollector {
 
         self.logLevel = self.bamConfig.logLevel
         HeliumLogger.use(self.logLevel)
-        //print("[SwiftDataCollector] found it")
+        print("[SwiftDataCollector] found it")
         self.formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"
         self.formatter.timeZone = TimeZone(abbreviation: "UTC") as TimeZone!
 
@@ -73,7 +73,7 @@ public class SwiftDataCollector {
         monitor.on(sendCPUMetrics)
         monitor.on(sendMemMetrics)
         monitor.on(sendAARData)
-        
+
         self.envInitandTopoRegister()
 
     }
@@ -209,9 +209,9 @@ public class SwiftDataCollector {
         if self.registeredResources {
             return
         }
-        
+
         self.envData = self.monitor.getEnvironmentData()
-        
+
         if(self.envData.isEmpty) {
             self.envData = ProcessInfo.processInfo.environment
         }
@@ -231,9 +231,9 @@ public class SwiftDataCollector {
             self.vcapAppDictionary["space_id"] = bamConfig.spaceId
             self.vcapAppDictionary["application_name"] = bamConfig.appName
         }
-        
+
         Log.debug("vcapAppDictionary: \(vcapAppDictionary!)")
-        
+
 
         self.applicationName = self.bamConfig.appName
 
