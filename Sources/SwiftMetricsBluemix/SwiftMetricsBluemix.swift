@@ -143,10 +143,11 @@ public class SwiftMetricsBluemix {
     let configMgr = ConfigurationManager().load(.environmentVariables)
     // Find BAM service using convenience method
     let bamServ: Service? = configMgr.getServices(type: bamServiceLabel).first
+    var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
     
     if let dcEn = ProcessInfo.processInfo.environment[bamDebugLabel],  dcEn == "true" {
         Log.info("[SwiftMetricsBluemix] Detected BAM debug environment setting, enabling SwiftBAMDC")
-        
+
         var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
     }
     else if let bamS = bamServ {
@@ -166,7 +167,7 @@ public class SwiftMetricsBluemix {
     // Find auto-scaling service using convenience method
     let scalingServ: Service? = configMgr.getServices(type: autoScalingServiceLabel).first
     guard let serv = scalingServ, let autoScalingService = AutoScalingService(withService: serv) else {
-      Log.error("[Auto-Scaling Agent] Could not find Auto-Scaling service.")
+      Log.info("[Auto-Scaling Agent] Could not find Auto-Scaling service.")
       return false
     }
 
