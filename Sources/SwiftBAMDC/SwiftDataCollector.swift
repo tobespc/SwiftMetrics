@@ -57,12 +57,10 @@ public class SwiftDataCollector {
         self.tenant = self.bamConfig.tenantId
         self.osResourceID = self.bamConfig.getResourceId(resName: "osID")
 
-        //self.swMetricInstance = try SwiftMetrics()
         self.swMetricInstance = swiftMetricsInstance
         self.monitor = swiftMetricsInstance.monitor()
 
         monitor.on({ (_: InitData) in
-            Log.info("SwiftDataCollector monitor.on initData")
             self.envInitandTopoRegister()
             self.registeredResources = true
         })
@@ -75,7 +73,6 @@ public class SwiftDataCollector {
         monitor.on(sendMemMetrics)
         monitor.on(sendAARData)
 
-        Log.info("SwiftDataCollector before envinitandtoporegister")
         self.envInitandTopoRegister()
 
     }
@@ -85,12 +82,9 @@ public class SwiftDataCollector {
         let timeAsInterval: TimeInterval = Double(cpu.timeOfSample)/1000
         let dataDate = Date(timeIntervalSince1970: timeAsInterval)
         let dataTimeStamp = self.formatter.string(from: dataDate as Date)
-        Log.info("in sendCPUMEtrics 1")
 
         if self.swiftDataCollectorInited {
-        Log.info("in sendCPUMEtrics 2")
             if ((self.cpuSampleTime == 0)||((timeAsInterval - self.cpuSampleTime) > 60)){
-            Log.info("in sendCPUMEtrics 3")
 
                 self.cpuSampleTime = timeAsInterval
 
