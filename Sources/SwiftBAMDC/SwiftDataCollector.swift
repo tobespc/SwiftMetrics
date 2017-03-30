@@ -26,7 +26,7 @@ public class SwiftDataCollector {
     public var swMetricInstance:SwiftMetrics
 
     var logLevel : LoggerMessageType = .info
-    var swiftDataCollectorInited = false
+    var swiftDataCollectorInited = true
     var envData: [String:String]!
     var vcapAppDictionary : [String: Any]!
     var applicationName: String = ""
