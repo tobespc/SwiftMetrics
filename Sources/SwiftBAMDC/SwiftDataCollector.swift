@@ -83,6 +83,8 @@ public class SwiftDataCollector {
         let dataDate = Date(timeIntervalSince1970: timeAsInterval)
         let dataTimeStamp = self.formatter.string(from: dataDate as Date)
 
+        print("######################## [SwiftDataCollector] in sendCPUMetrics")
+
         if self.swiftDataCollectorInited {
             if ((self.cpuSampleTime == 0)||((timeAsInterval - self.cpuSampleTime) > 60)){
 
