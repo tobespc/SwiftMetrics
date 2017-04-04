@@ -207,9 +207,12 @@ public class SwiftDataCollector {
 
     func envInitandTopoRegister() -> Void {
 
+        print("####### in envInitandTop start")
+
         if self.registeredResources {
             return
         }
+        print("####### in envInitandTop 1")
 
         self.envData = self.monitor.getEnvironmentData()
 
