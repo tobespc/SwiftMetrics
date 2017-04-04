@@ -96,7 +96,7 @@ public class SwiftDataCollector {
                     "dimensions": ["name": "system"],
                     "metrics": ["system_cpuPercentUsed" : cpu.percentUsedBySystem]]
 
-                Log.debug("########### systemCPUMetrics: \(systemCPUMetrics)")
+                print("########### systemCPUMetrics: \(systemCPUMetrics)")
 
                 self.bamConfig.makeAPMRequest(perfData: systemCPUMetrics, postURL: bamConfig.metricURL)
 
