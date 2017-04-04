@@ -143,7 +143,6 @@ public class SwiftMetricsBluemix {
     let configMgr = ConfigurationManager().load(.environmentVariables)
     // Find BAM service using convenience method
     let bamServ: Service? = configMgr.getServices(type: bamServiceLabel).first
-    var _ = try SwiftDataCollector(swiftMetricsInstance: swiftMetricsInstance)
     
     if let dcEn = ProcessInfo.processInfo.environment[bamDebugLabel],  dcEn == "true" {
         Log.info("[SwiftMetricsBluemix] Detected BAM debug environment setting, enabling SwiftBAMDC")
