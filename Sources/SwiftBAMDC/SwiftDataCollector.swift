@@ -26,7 +26,7 @@ public class SwiftDataCollector {
     public var swMetricInstance:SwiftMetrics
 
     var logLevel : LoggerMessageType = .info
-    var swiftDataCollectorInited = true
+    var swiftDataCollectorInited = false
     var envData: [String:String]!
     var vcapAppDictionary : [String: Any]!
     var applicationName: String = ""
@@ -96,7 +96,7 @@ public class SwiftDataCollector {
                     "dimensions": ["name": "system"],
                     "metrics": ["system_cpuPercentUsed" : cpu.percentUsedBySystem]]
 
-                Log.debug("systemCPUMetrics: \(systemCPUMetrics)")
+                Log.debug("########### systemCPUMetrics: \(systemCPUMetrics)")
 
                 self.bamConfig.makeAPMRequest(perfData: systemCPUMetrics, postURL: bamConfig.metricURL)
 
@@ -235,8 +235,9 @@ public class SwiftDataCollector {
 
         Log.debug("vcapAppDictionary: \(vcapAppDictionary!)")
 
-
         self.applicationName = self.bamConfig.appName
+
+        self.swiftDataCollectorInited = true
 
         var swiftAppResource : Dictionary<String,Any> = [
             "uniqueId": appResourceID,
